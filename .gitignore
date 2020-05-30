@@ -63,3 +63,8 @@ node_modules/
 
 # dotenv environment variables file
 .env
+
+functions/nuxt-dist/
+functions/node_modules/
+
+public/assets/
