@@ -1,40 +1,37 @@
-import Vue from "vue";
-import Router from "vue-router";
-import { interopDefault } from "./utils";
-import scrollBehavior from "./router.scrollBehavior.js";
+import Vue from 'vue'
+import Router from 'vue-router'
+import { interopDefault } from './utils'
+import scrollBehavior from './router.scrollBehavior.js'
 
-const _3ef65987 = () =>
-  interopDefault(
-    import("../nuxt-app/pages/index.vue" /* webpackChunkName: "pages/index" */)
-  );
+const _3ef65987 = () => interopDefault(import('../nuxt-app/pages/index.vue' /* webpackChunkName: "pages/index" */))
 
 // TODO: remove in Nuxt 3
-const emptyFn = () => {};
-const originalPush = Router.prototype.push;
+const emptyFn = () => {}
+const originalPush = Router.prototype.push
 Router.prototype.push = function push(location, onComplete = emptyFn, onAbort) {
-  return originalPush.call(this, location, onComplete, onAbort);
-};
+  return originalPush.call(this, location, onComplete, onAbort)
+}
 
-Vue.use(Router);
+Vue.use(Router)
 
 export const routerOptions = {
-  mode: "history",
-  base: decodeURI("/"),
-  linkActiveClass: "nuxt-link-active",
-  linkExactActiveClass: "nuxt-link-exact-active",
+  mode: 'history',
+  base: decodeURI('/'),
+  linkActiveClass: 'nuxt-link-active',
+  linkExactActiveClass: 'nuxt-link-exact-active',
   scrollBehavior,
 
   routes: [
     {
-      path: "/",
+      path: '/',
       component: _3ef65987,
-      name: "index"
-    }
+      name: 'index',
+    },
   ],
 
-  fallback: false
-};
+  fallback: false,
+}
 
 export function createRouter() {
-  return new Router(routerOptions);
+  return new Router(routerOptions)
 }

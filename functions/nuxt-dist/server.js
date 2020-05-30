@@ -2,13 +2,7 @@ import { stringify } from 'querystring'
 import Vue from 'vue'
 import fetch from 'node-fetch'
 import middleware from './middleware.js'
-import {
-  applyAsyncData,
-  middlewareSeries,
-  sanitizeComponent,
-  getMatchedComponents,
-  promisify
-} from './utils.js'
+import { applyAsyncData, middlewareSeries, sanitizeComponent, getMatchedComponents, promisify } from './utils.js'
 import fetchMixin from './mixins/fetch.server'
 import { createApp, NuxtError } from './index.js'
 import NuxtLink from './components/nuxt-link.server.js' // should be included after ./index.js
@@ -26,15 +20,17 @@ if (!Vue.__nuxt__fetch__mixin__) {
 Vue.component(NuxtLink.name, NuxtLink)
 Vue.component('NLink', NuxtLink)
 
-if (!global.fetch) { global.fetch = fetch }
+if (!global.fetch) {
+  global.fetch = fetch
+}
 
-const noopApp = () => new Vue({ render: h => h('div') })
+const noopApp = () => new Vue({ render: (h) => h('div') })
 
-function urlJoin () {
+function urlJoin() {
   return Array.prototype.slice.call(arguments).join('/').replace(/\/+/g, '/')
 }
 
-const createNext = ssrContext => (opts) => {
+const createNext = (ssrContext) => (opts) => {
   ssrContext.redirected = opts
   // If nuxt generate
   if (!ssrContext.res) {
@@ -44,7 +40,7 @@ const createNext = ssrContext => (opts) => {
   opts.query = stringify(opts.query)
   opts.path = opts.path + (opts.query ? '?' + opts.query : '')
   const routerBase = '/'
-  if (!opts.path.startsWith('http') && (routerBase !== '/' && !opts.path.startsWith(routerBase))) {
+  if (!opts.path.startsWith('http') && routerBase !== '/' && !opts.path.startsWith(routerBase)) {
     opts.path = urlJoin(routerBase, opts.path)
   }
   // Avoid loop redirect
@@ -53,7 +49,7 @@ const createNext = ssrContext => (opts) => {
     return
   }
   ssrContext.res.writeHead(opts.status, {
-    Location: opts.path
+    Location: opts.path,
   })
   ssrContext.res.end()
 }
@@ -85,7 +81,7 @@ export default async (ssrContext) => {
 
   const beforeRender = async () => {
     // Call beforeNuxtRender() methods
-    await Promise.all(ssrContext.beforeRenderFns.map(fn => promisify(fn, { Components, nuxtState: ssrContext.nuxt })))
+    await Promise.all(ssrContext.beforeRenderFns.map((fn) => promisify(fn, { Components, nuxtState: ssrContext.nuxt })))
   }
 
   const renderErrorPage = async () => {
@@ -108,8 +104,8 @@ export default async (ssrContext) => {
   const Components = getMatchedComponents(router.match(ssrContext.url))
 
   /*
-  ** Call global middleware (nuxt.config.js)
-  */
+   ** Call global middleware (nuxt.config.js)
+   */
   let midd = []
   midd = midd.map((name) => {
     if (typeof name === 'function') {
@@ -130,8 +126,8 @@ export default async (ssrContext) => {
   }
 
   /*
-  ** Set layout
-  */
+   ** Set layout
+   */
   let layout = Components.length ? Components[0].options.layout : NuxtError.layout
   if (typeof layout === 'function') {
     layout = layout(app.context)
@@ -144,8 +140,8 @@ export default async (ssrContext) => {
   ssrContext.nuxt.layout = _app.layoutName
 
   /*
-  ** Call middleware (layout + pages)
-  */
+   ** Call middleware (layout + pages)
+   */
   midd = []
 
   layout = sanitizeComponent(layout)
@@ -177,8 +173,8 @@ export default async (ssrContext) => {
   }
 
   /*
-  ** Call .validate()
-  */
+   ** Call .validate()
+   */
   let isValid = true
   try {
     for (const Component of Components) {
@@ -196,7 +192,7 @@ export default async (ssrContext) => {
     // ...If .validate() threw an error
     app.context.error({
       statusCode: validationError.statusCode || '500',
-      message: validationError.message
+      message: validationError.message,
     })
     return renderErrorPage()
   }
@@ -217,34 +213,36 @@ export default async (ssrContext) => {
   }
 
   // Call asyncData & fetch hooks on components matched by the route.
-  const asyncDatas = await Promise.all(Components.map((Component) => {
-    const promises = []
+  const asyncDatas = await Promise.all(
+    Components.map((Component) => {
+      const promises = []
 
-    // Call asyncData(context)
-    if (Component.options.asyncData && typeof Component.options.asyncData === 'function') {
-      const promise = promisify(Component.options.asyncData, app.context)
-      promise.then((asyncDataResult) => {
-        ssrContext.asyncData[Component.cid] = asyncDataResult
-        applyAsyncData(Component)
-        return asyncDataResult
-      })
-      promises.push(promise)
-    } else {
-      promises.push(null)
-    }
+      // Call asyncData(context)
+      if (Component.options.asyncData && typeof Component.options.asyncData === 'function') {
+        const promise = promisify(Component.options.asyncData, app.context)
+        promise.then((asyncDataResult) => {
+          ssrContext.asyncData[Component.cid] = asyncDataResult
+          applyAsyncData(Component)
+          return asyncDataResult
+        })
+        promises.push(promise)
+      } else {
+        promises.push(null)
+      }
 
-    // Call fetch(context)
-    if (Component.options.fetch && Component.options.fetch.length) {
-      promises.push(Component.options.fetch(app.context))
-    } else {
-      promises.push(null)
-    }
+      // Call fetch(context)
+      if (Component.options.fetch && Component.options.fetch.length) {
+        promises.push(Component.options.fetch(app.context))
+      } else {
+        promises.push(null)
+      }
 
-    return Promise.all(promises)
-  }))
+      return Promise.all(promises)
+    })
+  )
 
   // datas are the first row of each
-  ssrContext.nuxt.data = asyncDatas.map(r => r[0] || {})
+  ssrContext.nuxt.data = asyncDatas.map((r) => r[0] || {})
 
   // ...If there is a redirect or an error, stop the process
   if (ssrContext.redirected) {

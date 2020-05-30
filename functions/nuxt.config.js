@@ -1,7 +1,7 @@
 module.exports = {
-  srcDir: "nuxt-app",
-  buildDir: "nuxt-dist",
+  srcDir: 'nuxt-app',
+  buildDir: 'nuxt-dist',
   build: {
-    publicPath: "/assets/"
-  }
-};
+    publicPath: '/assets/',
+  },
+}

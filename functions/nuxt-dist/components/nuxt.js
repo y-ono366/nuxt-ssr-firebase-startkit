@@ -9,24 +9,24 @@ export default {
   name: 'Nuxt',
   components: {
     NuxtChild,
-    NuxtError
+    NuxtError,
   },
   props: {
     nuxtChildKey: {
       type: String,
-      default: undefined
+      default: undefined,
     },
     keepAlive: Boolean,
     keepAliveProps: {
       type: Object,
-      default: undefined
+      default: undefined,
     },
     name: {
       type: String,
-      default: 'default'
-    }
+      default: 'default',
+    },
   },
-  errorCaptured (error) {
+  errorCaptured(error) {
     // if we receive and error while showing the NuxtError component
     // capture the error and force an immediate update so we re-render
     // without the NuxtError component
@@ -36,7 +36,7 @@ export default {
     }
   },
   computed: {
-    routerViewKey () {
+    routerViewKey() {
       // If nuxtChildKey prop is given or current route has children
       if (typeof this.nuxtChildKey !== 'undefined' || this.$route.matched.length > 1) {
         return this.nuxtChildKey || compile(this.$route.matched[0].path)(this.$route.params)
@@ -54,24 +54,24 @@ export default {
         const { options } = Component
 
         if (options.key) {
-          return (typeof options.key === 'function' ? options.key(this.$route) : options.key)
+          return typeof options.key === 'function' ? options.key(this.$route) : options.key
         }
       }
 
       const strict = /\/$/.test(matchedRoute.path)
       return strict ? this.$route.path : this.$route.path.replace(/\/$/, '')
-    }
+    },
   },
-  beforeCreate () {
+  beforeCreate() {
     Vue.util.defineReactive(this, 'nuxt', this.$root.$options.nuxt)
   },
-  render (h) {
+  render(h) {
     // if there is no error
     if (!this.nuxt.err) {
       // Directly return nuxt child
       return h('NuxtChild', {
         key: this.routerViewKey,
-        props: this.$props
+        props: this.$props,
       })
     }
 
@@ -84,7 +84,7 @@ export default {
         h('h2', 'An error occured while showing the error page'),
         h('p', 'Unfortunately an error occured and while showing the error page another error occured'),
         h('p', `Error details: ${this.errorFromNuxtError.toString()}`),
-        h('nuxt-link', { props: { to: '/' } }, 'Go back to home')
+        h('nuxt-link', { props: { to: '/' } }, 'Go back to home'),
       ])
     }
 
@@ -94,8 +94,8 @@ export default {
 
     return h(NuxtError, {
       props: {
-        error: this.nuxt.err
-      }
+        error: this.nuxt.err,
+      },
     })
-  }
+  },
 }

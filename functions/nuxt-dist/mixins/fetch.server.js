@@ -18,7 +18,7 @@ async function serverPrefetch() {
   this._fetchKey = this.$ssrContext.nuxt.fetch.length
 
   // Add data-fetch-key on parent element of Component
-  const attrs = this.$vnode.data.attrs = this.$vnode.data.attrs || {}
+  const attrs = (this.$vnode.data.attrs = this.$vnode.data.attrs || {})
   attrs['data-fetch-key'] = this._fetchKey
 
   // Add to ssrContext for window.__NUXT__.fetch
@@ -40,9 +40,9 @@ export default {
     Vue.util.defineReactive(this, '$fetchState', {
       pending: true,
       error: null,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     })
 
     addLifecycleHook(this, 'serverPrefetch', serverPrefetch)
-  }
+  },
 }

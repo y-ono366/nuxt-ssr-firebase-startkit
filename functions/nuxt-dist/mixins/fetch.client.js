@@ -5,7 +5,7 @@ const isSsrHydration = (vm) => vm.$vnode && vm.$vnode.elm && vm.$vnode.elm.datas
 const nuxtState = window.__NUXT__
 
 export default {
-  beforeCreate () {
+  beforeCreate() {
     if (!hasFetch(this)) {
       return
     }
@@ -15,13 +15,13 @@ export default {
     Vue.util.defineReactive(this, '$fetchState', {
       pending: false,
       error: null,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     })
 
     this.$fetch = $fetch.bind(this)
     addLifecycleHook(this, 'created', created)
     addLifecycleHook(this, 'beforeMount', beforeMount)
-  }
+  },
 }
 
 function beforeMount() {
@@ -54,8 +54,9 @@ function created() {
 
 function $fetch() {
   if (!this._fetchPromise) {
-    this._fetchPromise = $_fetch.call(this)
-      .then(() => { delete this._fetchPromise })
+    this._fetchPromise = $_fetch.call(this).then(() => {
+      delete this._fetchPromise
+    })
   }
   return this._fetchPromise
 }
@@ -76,7 +77,7 @@ async function $_fetch() {
 
   const delayLeft = this._fetchDelay - (Date.now() - startTime)
   if (delayLeft > 0) {
-    await new Promise(resolve => setTimeout(resolve, delayLeft))
+    await new Promise((resolve) => setTimeout(resolve, delayLeft))
   }
 
   this.$fetchState.error = error

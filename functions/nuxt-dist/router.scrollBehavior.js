@@ -25,13 +25,10 @@ export default function (to, from, savedPosition) {
 
   // if no children detected and scrollToTop is not explicitly disabled
   const Pages = getMatchedComponents(to)
-  if (
-    Pages.length < 2 &&
-    Pages.every(Page => Page.options.scrollToTop !== false)
-  ) {
+  if (Pages.length < 2 && Pages.every((Page) => Page.options.scrollToTop !== false)) {
     // scroll to the top of the page
     position = { x: 0, y: 0 }
-  } else if (Pages.some(Page => Page.options.scrollToTop)) {
+  } else if (Pages.some((Page) => Page.options.scrollToTop)) {
     // if one of the children has scrollToTop option set to true
     position = { x: 0, y: 0 }
   }
@@ -65,7 +62,9 @@ export default function (to, from, savedPosition) {
             position = { selector: hash }
           }
         } catch (e) {
-          console.warn('Failed to save scroll position. Please add CSS.escape() polyfill (https://github.com/mathiasbynens/CSS.escape).')
+          console.warn(
+            'Failed to save scroll position. Please add CSS.escape() polyfill (https://github.com/mathiasbynens/CSS.escape).'
+          )
         }
       }
       resolve(position)
