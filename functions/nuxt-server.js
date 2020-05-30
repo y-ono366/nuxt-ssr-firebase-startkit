@@ -8,13 +8,11 @@ config.dev = process.env.NODE_ENV === 'development'
 const nuxt = new Nuxt(config)
 
 app.get('/api/ping', (req, res) => {
-  console.log('unko')
   ;('nuxt-dist/')
   res.json({ ping: 'pong' })
 })
 
 app.use(async (req, res) => {
-  console.log('30iVx')
   await nuxt.ready()
   nuxt.render(req, res)
 })

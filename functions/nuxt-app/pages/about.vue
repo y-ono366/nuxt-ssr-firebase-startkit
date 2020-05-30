@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div>Hello</div>
-    <nuxt-link to="/about">about</nuxt-link>
+    <div>about</div>
+    <nuxt-link to="/">back</nuxt-link>
   </div>
 </template>
 
